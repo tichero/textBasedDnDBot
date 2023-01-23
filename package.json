@@ -1,0 +1,28 @@
+{
+  "name": "textbaseddndbot",
+  "version": "1.0.0",
+  "description": "a simple text based DnD game for telegram",
+  "main": "main.js",
+  "scripts": {
+    "dev": "nodemon main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tichero/textBasedDnDBot.git"
+  },
+  "author": "tichero",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tichero/textBasedDnDBot/issues"
+  },
+  "homepage": "https://github.com/tichero/textBasedDnDBot#readme",
+  "devDependencies": {
+    "jsdoc": "^4.0.0",
+    "nodemon": "^2.0.20"
+  },
+  "dependencies": {
+    "@grammyjs/conversations": "^1.1.0",
+    "dotenv": "^16.0.3",
+    "grammy": "^1.13.1"
+  }
+}
