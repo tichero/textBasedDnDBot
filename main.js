@@ -1,5 +1,5 @@
 const {Bot, session, Context} = require("grammy");
-const {Menu} = require("@grammyjs/menu");
+const {Menu, MenuRange} = require("@grammyjs/menu");
 const { conversations, createConversation, Conversation } = require("@grammyjs/conversations");
 require("dotenv").config({path:"./config.env"});
 
@@ -45,25 +45,47 @@ bot.use(session({
 bot.use(conversations());
 bot.use(createConversation(createCharacter));
 
-const start = new Menu("start").text("Create new character", ctx => ctx.conversation.enter("createCharacter"))
-bot.use(start)
+const startMenu = new Menu("startMenu").text("Create new character", ctx => ctx.conversation.enter("createCharacter"))
+bot.use(startMenu)
 
 bot.command("start", async ctx => {
-    await ctx.reply("Welcome! Here are some things you can do", {reply_markup: start});
+    await ctx.reply("Welcome! Here are some things you can do", {reply_markup: startMenu});
 });
 
-bot.command("characters", ctx => {
-    const user_id = ctx.from.id
-    if (!characters[user_id]) {
-        ctx.reply("There are no characters yet!")
-        return
-    }
+// bot.command("characters", ctx => {
+//     const user_id = ctx.from.id
+//     if (!characters[user_id]) {
+//         ctx.reply("There are no characters yet!")
+//         return
+//     }
 
-    const charactersString = characters[user_id].join("\n");
+//     const charactersString = characters[user_id].join("\n");
 
-    ctx.reply(charactersString)
+//     ctx.reply(charactersString)
 
+// })
+
+const charactersMenu = new Menu("charactersMenu");
+
+charactersMenu
+    .dynamic(ctx => {
+        user_id = ctx.from.id
+        const range = new MenuRange();
+        for (let character of characters[user_id]) {
+            range
+                .text(character, async ctx => {
+                    await ctx.reply(`You chose ${character}`)
+                    await ctx.deleteMessage()
+                })
+                .row()
+        }
+        return range
+    })
+
+bot.use(charactersMenu)
+
+bot.command("characters", async ctx => {
+    ctx.reply("Here are your characters!", {reply_markup: charactersMenu})
 })
-
 
 bot.start();
